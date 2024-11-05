@@ -1,13 +1,13 @@
 %%
-% 2024.10.15创建
+% 2024.11.5创建
 % 修改论文中请求接受率的图，变为曲线，(到目前为止的)接受率vs部署过程
 % FP算法
 
 clc; clear all; close all;
 
 addpath(strcat(pwd, '\functions'));
-load('Net_ws_30.mat');
-% load('Net_ws_60.mat');
+load('Network_and_Request_Data_ws_4.mat');
+
 rate = 0.75;
 
 % plot(Graph_ini, 'EdgeLabel', g_ini);
@@ -17,20 +17,7 @@ beta = beta_ini;
 alpha = alpha_ini;
 
 K = 10;     % Batch Size
-% % mu = 8;     % 离去率
-% 
-% % load('OptimalBand.mat');    % 各分布下黑盒优化出的最优带宽配置
-% % band_alloc = [g_BBO_FP(:,1), g_BBO_FP(:,2), g_BBO_FP(:,1), g_BBO_FP(:,2)];      % 每段的资源配置方案，30*4
-% 
-% % 是否有资源预分配
-% % HaveBBO = 1;
-% 
-% % [资源调整的时刻] = [请求分布发生变化的时刻]+delay
-% % delay = 30;
-% % ChangeBatch = [1, len/K+1+delay, 2*len/K+1+delay, 3*len/K+1+delay];
-% % ChangeID = [len+1, 2*len+1, 3*len+1];
-% 
-% % g_now_observ = zeros(E, 4);         % 记录四个时刻的剩余带宽情况
+
 
 %%
 TestNum = 100;                % 一共几次重复实验
@@ -42,7 +29,6 @@ for test_num = 1:TestNum     % 多次重复实验
     % 网络资源初始化
     c_now = c_ini;
     g_now = g_ini;
-%     g_now = band_alloc(:,1);      % 取第一列，分布1下的最优资源配置
     
     % 初始化一些统计变量
     c_use_id = zeros(request_num, V);           % 每条请求的节点资源占用情况
@@ -62,28 +48,6 @@ for test_num = 1:TestNum     % 多次重复实验
 
     % 分批部署所有请求
     for num_batch = 1 : request_num/K
-        
-%         % 在部署每批请求之前，看有哪些请求离去，更新网络资源
-%         if num_batch >= 21
-%             
-%             [c_now, g_now, Alive_Req] = Leave_Update(mu, c_now, g_now, Alive_Req, c_use_id, g_use_id);
-%         end
-        
-%         % 检查是否需要进行资源预分配
-%         % if (多种触发条件), (c,g) = BBO()
-% 
-%         % 在ChangeBatch时刻，重新配置资源，调整g_now
-%         if HaveBBO == 1
-%             if ismember(num_batch, ChangeBatch)
-%                 dd = find(ChangeBatch==num_batch);      % 先确定现在是第几阶段
-%                 g_now_observ(:,dd) = g_now;             % 记录当前剩余带宽情况
-%                 if dd>=2
-%                     g_now = g_now + ( band_alloc(:, dd) - band_alloc(:, dd-1) );
-%                     % 对负数的处理
-%                     g_now(g_now<0) = 0;
-%                 end
-%             end
-%         end
     
         str = strcat('==========开始部署第',num2str(num_batch),'批请求==========');
         disp(str);
@@ -122,13 +86,6 @@ for test_num = 1:TestNum     % 多次重复实验
     foldname = strcat(pwd, '\Save\1015\FP\');
     % foldname = strcat(pwd, '\Save\1016\FP\');
     filename = strcat('FP_', num2str(test_num+base_num));
-%     if HaveBBO==1
-%         foldname = strcat(pwd, '\Save\1115\HaveBBO\');
-%         filename = strcat('FPBBO_mu_', num2str(mu), '_', num2str(test_num));
-%     else
-%         foldname = strcat(pwd, '\Save\1115\NoBBO\');
-%         filename = strcat('FP_mu_', num2str(mu), '_', num2str(test_num));
-%     end
     save(strcat(foldname, filename));
 
 

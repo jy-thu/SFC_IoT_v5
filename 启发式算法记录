@@ -1,0 +1,14 @@
+[result_P,fval,exitflag_P,output_P, Accept_num, c_use_id, c_use_result, g_use_id, g_use_result, choosen_nodes, Accepted_Requests] = Solve_FP(...
+                beta, P_matrix_ini, V, c_now, g_now, Startfrom, Pointto, alpha, requests_K, cost_up, NoUp, HaveUpCost, idxs_d, Allow, K, c_use_id, g_use_id);
+
+Output:
+Benefit：本批部署净收益(优化目标)
+c_use_id：每条请求(id=1~200)的节点资源占用情况，200*V
+c_use_result：本批部署在每个节点上消耗的总资源量，1*V
+g_use_id：每条请求(id=1~200)的链路资源占用情况，200*E
+g_use_result：本批部署在每条链路上消耗的总资源量，1*E
+choosen_nodes：记录每条请求的L个服务所在节点号，K*L
+Accepted_Requests：记录本批每个请求的接受情况(0/1)，K*1
+
+
+
